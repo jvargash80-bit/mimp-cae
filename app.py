@@ -46,9 +46,11 @@ def init_db():
             con.execute("""
                 CREATE TABLE IF NOT EXISTS reservas (
                     id BIGSERIAL PRIMARY KEY,
-                    espacio TEXT NOT NULL,
-                    trabajador TEXT NOT NULL,
-                    fecha DATE NOT NULL,
+                   espacio TEXT NOT NULL,
+                trabajador TEXT NOT NULL,
+                contacto TEXT NOT NULL DEFAULT '',
+                oficina TEXT NOT NULL DEFAULT '',
+                fecha DATE NOT NULL,
                     hora_inicio TIME NOT NULL,
                     hora_fin TIME NOT NULL,
                     motivo TEXT,
@@ -62,10 +64,12 @@ def init_db():
         else:
             con.execute("""
                 CREATE TABLE IF NOT EXISTS reservas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    espacio TEXT NOT NULL,
-                    trabajador TEXT NOT NULL,
-                    fecha TEXT NOT NULL,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                espacio TEXT NOT NULL,
+                trabajador TEXT NOT NULL,
+                contacto TEXT NOT NULL DEFAULT '',
+                oficina TEXT NOT NULL DEFAULT '',
+                fecha TEXT NOT NULL,
                     hora_inicio TEXT NOT NULL,
                     hora_fin TEXT NOT NULL,
                     motivo TEXT,
@@ -78,7 +82,31 @@ def init_db():
 
 
 init_db()
+def actualizar_db():
+    con = get_db()
+    try:
+        if using_postgres():
+            con.execute("""
+                ALTER TABLE reservas
+                ADD COLUMN IF NOT EXISTS contacto TEXT NOT NULL DEFAULT '',
+                ADD COLUMN IF NOT EXISTS oficina TEXT NOT NULL DEFAULT ''
+            """)
+        else:
+            try:
+                con.execute("ALTER TABLE reservas ADD COLUMN contacto TEXT NOT NULL DEFAULT ''")
+            except Exception:
+                pass
 
+            try:
+                con.execute("ALTER TABLE reservas ADD COLUMN oficina TEXT NOT NULL DEFAULT ''")
+            except Exception:
+                pass
+
+        con.commit()
+    finally:
+        con.close()
+
+actualizar_db()
 
 def valid_time_range(inicio, fin):
     try:
@@ -127,12 +155,14 @@ def healthz():
 def reservar():
     espacio = request.form.get("espacio", "").strip()
     trabajador = request.form.get("trabajador", "").strip()
+    contacto = request.form.get("contacto", "").strip()
+    oficina = request.form.get("oficina", "").strip()
     fecha = request.form.get("fecha", "").strip()
     inicio = request.form.get("hora_inicio", "").strip()
     fin = request.form.get("hora_fin", "").strip()
     motivo = request.form.get("motivo", "").strip()
 
-    if not all([espacio, trabajador, fecha, inicio, fin]):
+    if not all([espacio, trabajador, contacto, oficina, fecha, inicio, fin]):
         flash("Completa todos los campos obligatorios.", "error")
         return redirect(url_for("index", fecha=fecha))
     if espacio not in ESPACIOS:
@@ -167,15 +197,27 @@ def reservar():
 
         if using_postgres():
             con.execute("""
-                INSERT INTO reservas (espacio, trabajador, fecha, hora_inicio, hora_fin, motivo)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (espacio, trabajador, fecha, inicio, fin, motivo))
+              INSERT INTO reservas
+                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
         else:
-            con.execute("""
+           con.execute("""
                 INSERT INTO reservas
-                (espacio, trabajador, fecha, hora_inicio, hora_fin, motivo, creado_en)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (espacio, trabajador, fecha, inicio, fin, motivo, datetime.now().isoformat(timespec="seconds")))
+                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+          espacio
+    trabajador
+    contacto
+    oficina
+    fecha
+    inicio
+    fin
+    motivo
+    creado_en
+            datetime.now().isoformat(timespec="seconds")
+)
         con.commit()
         flash("Reserva confirmada automáticamente.", "success")
     except Exception:
