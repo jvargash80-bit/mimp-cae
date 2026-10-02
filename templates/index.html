@@ -1,1 +1,45 @@
-templates/index.html
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MIMP-CAE | Separación de aulas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">M</div><div><strong>MIMP-CAE</strong><span>Sistema de separación de espacios</span></div></div>
+</header>
+<main class="container">
+  <section class="hero"><div><p class="eyebrow">GESTIÓN DE ESPACIOS</p><h1>Separación de aulas</h1><p>Reserva un aula o salón por horas. Las reservas se confirman automáticamente si el horario está disponible.</p></div></section>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="messages">{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+
+  <div class="grid">
+    <section class="card form-card">
+      <h2>Nueva reserva</h2>
+      <form action="{{ url_for('reservar') }}" method="post">
+        <label>Trabajador *</label><input name="trabajador" placeholder="Nombre y apellido" required>
+        <label>Fecha *</label><input type="date" name="fecha" value="{{ fecha }}" required>
+        <div class="two"><div><label>Hora de inicio *</label><input type="time" name="hora_inicio" required></div><div><label>Hora de fin *</label><input type="time" name="hora_fin" required></div></div>
+        <label>Espacio *</label>
+        <select name="espacio" required><option value="">Seleccionar...</option>{% for espacio in espacios %}<option>{{ espacio }}</option>{% endfor %}</select>
+        <label>Motivo / actividad</label><textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
+        <button type="submit">Confirmar reserva</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head"><div><h2>Reservas del día</h2><p>{{ fecha }}</p></div><form method="get"><input type="date" name="fecha" value="{{ fecha }}"><button class="secondary">Ver fecha</button></form></div>
+      {% if reservas %}
+      <div class="table-wrap"><table><thead><tr><th>Espacio</th><th>Horario</th><th>Trabajador</th><th>Actividad</th><th></th></tr></thead><tbody>
+      {% for r in reservas %}<tr><td><b>{{ r['espacio'] }}</b></td><td>{{ r['hora_inicio'] }} – {{ r['hora_fin'] }}</td><td>{{ r['trabajador'] }}</td><td>{{ r['motivo'] or '—' }}</td><td><form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post" onsubmit="return confirm('¿Cancelar esta reserva?')"><button class="danger">Cancelar</button></form></td></tr>{% endfor %}
+      </tbody></table></div>
+      {% else %}<div class="empty">No hay reservas para esta fecha.</div>{% endif %}
+    </section>
+  </div>
+</main>
+<footer>MIMP-CAE · Sistema de separación de espacios</footer>
+</body></html>
