@@ -224,7 +224,7 @@ def reservar():
                 datetime.now().isoformat(timespec="seconds")
             ))
 
-        con.commit()
+            con.commit()
         flash("Reserva confirmada automáticamente.", "success")
     except Exception:
         con.rollback()
