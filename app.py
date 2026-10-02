@@ -201,22 +201,29 @@ def reservar():
                 (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
-     else:
-        con.execute("""
-        INSERT INTO reservas
-        (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        espacio,
-        trabajador,
-        contacto,
-        oficina,
-        fecha,
-        inicio,
-        fin,
-        motivo,
-        datetime.now().isoformat(timespec="seconds")
-    ))
+             if using_postgres():
+                 con.execute("""
+                INSERT INTO reservas
+                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
+            else:
+               con.execute("""
+                INSERT INTO reservas
+                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                espacio,
+                trabajador,
+                contacto,
+                oficina,
+                fecha,
+                inicio,
+                fin,
+                motivo,
+                datetime.now().isoformat(timespec="seconds")
+            ))
+
         con.commit()
         flash("Reserva confirmada automáticamente.", "success")
     except Exception:
