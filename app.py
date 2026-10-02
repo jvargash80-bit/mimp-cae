@@ -201,14 +201,14 @@ def reservar():
                 (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
-             if using_postgres():
+        if using_postgres():
                  con.execute("""
                 INSERT INTO reservas
                 (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
-            else:
-               con.execute("""
+        else:
+            con.execute("""
                 INSERT INTO reservas
                 (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
