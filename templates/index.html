@@ -48,31 +48,45 @@
 
     <section class="card">
       <div class="section-head"><div><h2>Reservas del día</h2><p>{{ fecha }}</p></div><form method="get"><input type="date" name="fecha" value="{{ fecha }}"><button class="secondary">Ver fecha</button></form></div>
-      {% if reservas %}
-      <div class="table-wrap"><table><thead><tr><th>Espacio</th>
-<th>Horario</th>
-<th>Trabajador</th>
-<th>Contacto</th>
-<th>Oficina</th>
-<th>Actividad</th>
-<th></th></tr></thead><tbody>
-      {% for r in reservas %}
-<tr>
-    <td><b>{{ r['espacio'] }}</b></td>
-    <td>{{ r['hora_inicio'] }} – {{ r['hora_fin'] }}</td>
-    <td>{{ r['trabajador'] }}</td>
-    <td>{{ r['contacto'] }}</td>
-    <td>{{ r['oficina'] }}</td>
-    <td>{{ r['motivo'] or '—' }}</td>
-    <td>
-        <form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post">
-            <button type="submit">Cancelar</button>
-        </form>
-    </td>
-</tr>
-{% endfor %}</b></td><td>{{ r['hora_inicio'] }} – {{ r['hora_fin'] }}</td><td>{{ r['trabajador'] }}</td><td>{{ r['motivo'] or '—' }}</td><td><form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post" onsubmit="return confirm('¿Cancelar esta reserva?')"><button class="danger">Cancelar</button></form></td></tr>{% endfor %}
-      </tbody></table></div>
-      {% else %}<div class="empty">No hay reservas para esta fecha.</div>{% endif %}
+     {% if reservas %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Espacio</th>
+                <th>Horario</th>
+                <th>Trabajador</th>
+                <th>Contacto</th>
+                <th>Oficina</th>
+                <th>Actividad</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for r in reservas %}
+            <tr>
+                <td><b>{{ r['espacio'] }}</b></td>
+                <td>{{ r['hora_inicio'] }} – {{ r['hora_fin'] }}</td>
+                <td>{{ r['trabajador'] }}</td>
+                <td>{{ r['contacto'] }}</td>
+                <td>{{ r['oficina'] }}</td>
+                <td>{{ r['motivo'] or '—' }}</td>
+                <td>
+                    <form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post">
+                        <button type="submit">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty">
+    No hay reservas para esta fecha.
+</div>
+{% endif %}
     </section>
   </div>
 </main>
