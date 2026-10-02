@@ -22,6 +22,21 @@
       <h2>Nueva reserva</h2>
       <form action="{{ url_for('reservar') }}" method="post">
         <label>Trabajador *</label><input name="trabajador" placeholder="Nombre y apellido" required>
+        <label>N.º de contacto *</label>
+<input
+    type="tel"
+    name="contacto"
+    placeholder="Ej.: 987654321"
+    required
+>
+
+<label>Oficina *</label>
+<input
+    type="text"
+    name="oficina"
+    placeholder="Ej.: Oficina 305"
+    required
+>
         <label>Fecha *</label><input type="date" name="fecha" value="{{ fecha }}" required>
         <div class="two"><div><label>Hora de inicio *</label><input type="time" name="hora_inicio" required></div><div><label>Hora de fin *</label><input type="time" name="hora_fin" required></div></div>
         <label>Espacio *</label>
