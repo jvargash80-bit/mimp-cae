@@ -24,6 +24,15 @@ AULAS = [
     ("Salón 1", "salon"),
     ("Salón 2", "salon"),
 ]
+
+AFOROS = {
+    "Aula 1": 30,
+    "Aula 2": 30,
+    "Aula 3": 30,
+    "Salón 1": 10,
+    "Salón 2": 6,
+}
+
 ESPACIOS = [x[0] for x in AULAS]
 
 
