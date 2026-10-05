@@ -42,7 +42,12 @@
         <label>Fecha *</label><input type="date" name="fecha" value="{{ fecha }}" required>
         <div class="two"><div><label>Hora de inicio *</label><input type="time" name="hora_inicio" required></div><div><label>Hora de fin *</label><input type="time" name="hora_fin" required></div></div>
         <label>Espacio *</label>
-        <select name="espacio" required><option value="">Seleccionar...</option>{% for espacio in espacios %}<option>{{ espacio }}</option>{% endfor %}</select>
+        <select name="espacio" required>
+    <option value="">Seleccionar...</option>
+    {% for espacio in espacios %}
+        <option value="{{ espacio }}">{{ espacio }} (Aforo: {{ aforos[espacio] }} personas)</option>
+    {% endfor %}
+</select>
         <label>Motivo / actividad</label><textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
         <button type="submit">Confirmar reserva</button>
       </form>
