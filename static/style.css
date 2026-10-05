@@ -21,18 +21,13 @@ body {
     gap: 12px;
 }
 
-.logo {
-    width: 42px;
-    height: 42px;
-    background: white;
-    color: #17365d;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+.logo-img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    display: block;
 }
-
+ 
 .brand strong {
     font-size: 22px;
 }
