@@ -47,14 +47,14 @@ body {
     letter-spacing: 1px;
 }
 
-.logo-CAE 22 {
+.logo-CAE {
     width: 180px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.logo-CAE 22 img {
+.logo-CAE img {
     max-width: 170px;
     max-height: 75px;
     width: auto;
