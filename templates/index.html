@@ -96,25 +96,80 @@
 {% endif %}
     </section>
   </div>
-  {% for horario in fila.horarios %}
+ <section class="card disponibilidad-card">
+
+    <div class="section-head">
+        <div>
+            <h2>Disponibilidad de espacios</h2>
+            <p>Consulta los horarios disponibles para la fecha seleccionada.</p>
+        </div>
+
+        <div class="leyenda">
+            <span class="disponible">● Disponible</span>
+            <span class="reservado">● Reservado</span>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="tabla-disponibilidad">
+
+            <thead>
+                <tr>
+                    <th>Espacio</th>
+                    <th>Aforo</th>
+
+                    {% for inicio, fin in horarios %}
+                        <th>{{ inicio }}<br>{{ fin }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for fila in disponibilidad %}
+
+                    <tr>
+
+                        <td>
+                            <strong>{{ fila.espacio }}</strong>
+                        </td>
+
+                        <td>
+                            {{ fila.aforo }} personas
+                        </td>
+
+                        {% for horario in fila.horarios %}
+
                             <td>
+
                                 {% if horario.estado == "Reservado" %}
+
                                     <div class="estado reservado">
                                         🔴 Reservado
                                         <small>{{ horario.trabajador }}</small>
                                     </div>
+
                                 {% else %}
+
                                     <div class="estado disponible">
                                         🟢 Disponible
                                     </div>
+
                                 {% endif %}
+
                             </td>
+
                         {% endfor %}
+
                     </tr>
+
                 {% endfor %}
+
             </tbody>
+
         </table>
     </div>
+
 </section>
 </main>
 <footer>MIMP-CAE · Sistema de separación de espacios</footer>
