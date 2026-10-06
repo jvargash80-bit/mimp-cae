@@ -11,19 +11,27 @@ body {
 
 .topbar {
     width: 100%;
-    height: 100px;
-    background: white;
+    height: 110px;
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 25px;
+    padding: 0 35px;
     box-sizing: border-box;
     border-bottom: 5px solid #d71920;
 }
 
+.logo-ministerio {
+    width: 260px;
+    display: flex;
+    align-items: center;
+}
+
 .logo-ministerio img {
-    height: 65px;
+    max-width: 260px;
+    max-height: 70px;
     width: auto;
+    height: auto;
 }
 
 .titulo-sistema {
@@ -31,19 +39,27 @@ body {
     text-align: center;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.titulo-sistema h1 {
+    margin: 0;
+    font-size: 38px;
+    font-weight: 700;
+    color: #17395f;
+    letter-spacing: 1px;
 }
 
-.logo-img {
-    width: 110px;
-    height: 55px;
-    object-fit: contain;
-    display: block;
+.logo-cae {
+    width: 180px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
- 
+
+.logo-cae img {
+    max-width: 170px;
+    max-height: 75px;
+    width: auto;
+    height: auto;
+}
 .brand strong {
     font-size: 22px;
 }
