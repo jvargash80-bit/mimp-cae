@@ -138,7 +138,51 @@ def get_reservas(fecha):
         ).fetchall()
     finally:
         con.close()
+def generar_disponibilidad(reservas):
+    disponibilidad = []
 
+    for espacio in ESPACIOS:
+        fila = {
+            "espacio": espacio,
+            "aforo": AFOROS[espacio],
+            "horarios": []
+        }
+
+        for inicio, fin in HORARIOS:
+            inicio_min = convertir_minutos(inicio)
+            fin_min = convertir_minutos(fin)
+
+            reserva_encontrada = None
+
+            for reserva in reservas:
+                if reserva["espacio"] != espacio:
+                    continue
+
+                reserva_inicio = convertir_minutos(reserva["hora_inicio"])
+                reserva_fin = convertir_minutos(reserva["hora_fin"])
+
+                if reserva_inicio < fin_min and reserva_fin > inicio_min:
+                    reserva_encontrada = reserva
+                    break
+
+            if reserva_encontrada:
+                fila["horarios"].append({
+                    "inicio": inicio,
+                    "fin": fin,
+                    "estado": "Reservado",
+                    "trabajador": reserva_encontrada["trabajador"]
+                })
+            else:
+                fila["horarios"].append({
+                    "inicio": inicio,
+                    "fin": fin,
+                    "estado": "Disponible",
+                    "trabajador": ""
+                })
+
+        disponibilidad.append(fila)
+
+    return disponibilidad
 
 @app.route("/")
 def index():
