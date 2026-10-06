@@ -144,7 +144,18 @@ def get_reservas(fecha):
 def index():
     fecha = request.args.get("fecha") or datetime.now().strftime("%Y-%m-%d")
     reservas = get_reservas(fecha)
-    return render_template("index.html", reservas=reservas, fecha=fecha, espacios=ESPACIOS, aforos=AFOROS)
+
+    disponibilidad = generar_disponibilidad(reservas)
+
+    return render_template(
+        "index.html",
+        reservas=reservas,
+        fecha=fecha,
+        espacios=ESPACIOS,
+        aforos=AFOROS,
+        disponibilidad=disponibilidad,
+        horarios=HORARIOS
+    )
 
 
 @app.get("/healthz")
