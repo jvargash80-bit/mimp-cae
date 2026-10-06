@@ -151,6 +151,11 @@ HORARIOS = [
     ("16:00", "17:00"),
     ("17:00", "18:00"),
 ]
+    def convertir_minutos(hora):
+    texto = str(hora)[:5]
+    horas, minutos = texto.split(":")
+    return int(horas) * 60 + int(minutos)
+
 def generar_disponibilidad(reservas):
     disponibilidad = []
 
