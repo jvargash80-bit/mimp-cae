@@ -96,6 +96,26 @@
 {% endif %}
     </section>
   </div>
+  {% for horario in fila.horarios %}
+                            <td>
+                                {% if horario.estado == "Reservado" %}
+                                    <div class="estado reservado">
+                                        🔴 Reservado
+                                        <small>{{ horario.trabajador }}</small>
+                                    </div>
+                                {% else %}
+                                    <div class="estado disponible">
+                                        🟢 Disponible
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 </main>
 <footer>MIMP-CAE · Sistema de separación de espacios</footer>
 </body></html>
