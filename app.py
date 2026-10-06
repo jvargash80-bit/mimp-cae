@@ -159,6 +159,7 @@ HORARIOS = [
 def generar_disponibilidad(reservas):
     disponibilidad = []
 
+    
     for espacio in ESPACIOS:
         fila = {
             "espacio": espacio,
