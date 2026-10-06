@@ -32,10 +32,16 @@
 
   <div class="grid">
     <section class="card form-card">
-      <h2>Nueva reserva</h2>
+      <h2>
+         <span class="icono-titulo">
+        <i class="bi bi-calendar2-plus"></i>
+    </span>
+    Nueva reserva
+</h2>
       <form action="{{ url_for('reservar') }}" method="post">
-        <label>Trabajador *</label><input name="trabajador" placeholder="Nombre y apellido" required>
-        <label>N.º de contacto *</label>
+        <label><i class="bi bi-person"></i> Trabajador *</label>
+               <input name="trabajador" placeholder="Nombre y apellido" required>   
+        <label><i class="bi bi-telephone"></i> N.º de contacto *</label>
 <input
     type="tel"
     name="contacto"
