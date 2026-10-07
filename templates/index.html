@@ -49,23 +49,23 @@
     required
 >
 
-<label>Oficina *</label>
+<label><i class="bi bi-building"></i> Oficina *</label>
 <input
     type="text"
     name="oficina"
     placeholder="Ej.: Oficina 305"
     required
 >
-        <label>Fecha *</label><input type="date" name="fecha" value="{{ fecha }}" required>
-        <div class="two"><div><label>Hora de inicio *</label><input type="time" name="hora_inicio" required></div><div><label>Hora de fin *</label><input type="time" name="hora_fin" required></div></div>
-        <label>Espacio *</label>
+        <label><i class="bi bi-calendar3"></i> Fecha *</label><input type="date" name="fecha" value="{{ fecha }}" required>
+        <div class="two"><div><label><i class="bi bi-clock"></i> Hora de inicio *</label><input type="time" name="hora_inicio" required></div><div><label><i class="bi bi-clock"></i> Hora de fin *</label><input type="time" name="hora_fin" required></div></div>
+        <label><i class="bi bi-door-open"></i> Espacio *</label>
         <select name="espacio" required>
     <option value="">Seleccionar...</option>
     {% for espacio in espacios %}
         <option value="{{ espacio }}">{{ espacio }} (Aforo: {{ aforos[espacio] }} personas)</option>
     {% endfor %}
 </select>
-        <label>Motivo / actividad</label><textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
+       <label><i class="bi bi-file-text"></i> Motivo / actividad</label><textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
         <button type="submit">Confirmar reserva</button>
       </form>
     </section>
