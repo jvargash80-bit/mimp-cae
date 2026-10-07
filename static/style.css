@@ -153,6 +153,15 @@ button:hover {
 .secondary {
     background: #64748b;
 }
+.btn-limpiar {
+    background: #eef2f7;
+    color: #334155;
+    margin-right: 8px;
+}
+
+.btn-limpiar:hover {
+    background: #e2e8f0;
+}
 
 .table-wrap {
     overflow-x: auto;
