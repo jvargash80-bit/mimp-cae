@@ -192,8 +192,13 @@
 .detalle-ambiente-texto p{margin:5px 0}
 </style>
 
+
 <script>
-(() => {
+document.addEventListener("DOMContentLoaded", function () {
+  const selector = document.getElementById("espacio");
+  const tarjeta = document.getElementById("detalle-ambiente");
+  const foto = document.getElementById("foto-ambiente");
+
   const datos = {
     "Sala de Sesiones": {
       foto: "{{ url_for('static', filename='sala-sesiones.png') }}",
@@ -212,33 +217,37 @@
     }
   };
 
-  const selector = document.getElementById("espacio");
-  const tarjeta = document.getElementById("detalle-ambiente");
-  const foto = document.getElementById("foto-ambiente");
+  if (!selector || !tarjeta || !foto) {
+    console.error("No se encontró el bloque HTML de las fotografías.");
+    return;
+  }
 
   function actualizarFoto() {
-    const info = datos[selector.value];
+    const nombre = selector.value;
+    const info = datos[nombre];
 
     if (!info) {
       tarjeta.hidden = true;
       return;
     }
 
-    foto.src = info.foto;
-    foto.alt = "Fotografía de " + selector.value;
-    document.getElementById("nombre-ambiente").textContent =
-      selector.value;
-    document.getElementById("aforo-ambiente").textContent =
-      info.aforo;
-    document.getElementById("equipo-ambiente").textContent =
-      info.equipo;
+    document.getElementById("nombre-ambiente").textContent = nombre;
+    document.getElementById("aforo-ambiente").textContent = info.aforo;
+    document.getElementById("equipo-ambiente").textContent = info.equipo;
 
+    foto.src = info.foto;
+    foto.alt = "Fotografía de " + nombre;
     tarjeta.hidden = false;
+
+    console.log("Ambiente seleccionado:", nombre, info.foto);
   }
 
   selector.addEventListener("change", actualizarFoto);
   actualizarFoto();
-})();
+});
 </script>
+</body>
+</html>
+
 </body>
 </html>
