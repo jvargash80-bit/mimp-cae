@@ -21,16 +21,24 @@ AULAS = [
     ("Aula 1", "aula"),
     ("Aula 2", "aula"),
     ("Aula 3", "aula"),
-    ("Salón 1", "salon"),
-    ("Salón 2", "salon"),
+    ("Sala de Sesiones", "salon"),
+    ("Sala de Reuniones", "salon"),
 ]
 
 AFOROS = {
     "Aula 1": 30,
     "Aula 2": 30,
     "Aula 3": 30,
-    "Salón 1": 10,
-    "Salón 2": 6,
+    "Sala de Sesiones": 10,
+    "Sala de Reuniones": 6,
+}
+
+EQUIPAMIENTO = {
+    "Aula 1": "Se mantiene sin cambios",
+    "Aula 2": "Se mantiene sin cambios",
+    "Aula 3": "Pizarra y sillas",
+    "Sala de Sesiones": "Proyector",
+    "Sala de Reuniones": "Se mantiene sin cambios",
 }
 
 ESPACIOS = [x[0] for x in AULAS]
@@ -117,6 +125,34 @@ def actualizar_db():
 
 actualizar_db()
 
+def actualizar_nombres_espacios():
+    """Actualiza los nombres antiguos guardados en reservas."""
+    con = get_db()
+    try:
+        if using_postgres():
+            con.execute(
+                "UPDATE reservas SET espacio = %s WHERE espacio = %s",
+                ("Sala de Sesiones", "Salón 1"),
+            )
+            con.execute(
+                "UPDATE reservas SET espacio = %s WHERE espacio = %s",
+                ("Sala de Reuniones", "Salón 2"),
+            )
+        else:
+            con.execute(
+                "UPDATE reservas SET espacio = ? WHERE espacio = ?",
+                ("Sala de Sesiones", "Salón 1"),
+            )
+            con.execute(
+                "UPDATE reservas SET espacio = ? WHERE espacio = ?",
+                ("Sala de Reuniones", "Salón 2"),
+            )
+        con.commit()
+    finally:
+        con.close()
+
+actualizar_nombres_espacios()
+
 def valid_time_range(inicio, fin):
     try:
         return datetime.strptime(inicio, "%H:%M") < datetime.strptime(fin, "%H:%M")
@@ -164,6 +200,7 @@ def generar_disponibilidad(reservas):
         fila = {
             "espacio": espacio,
             "aforo": AFOROS[espacio],
+            "equipamiento": EQUIPAMIENTO[espacio],
             "horarios": []
         }
 
@@ -216,6 +253,7 @@ def index():
         fecha=fecha,
         espacios=ESPACIOS,
         aforos=AFOROS,
+        equipamiento=EQUIPAMIENTO,
         disponibilidad=disponibilidad,
         horarios=HORARIOS
     )
@@ -280,34 +318,21 @@ def reservar():
 
         if using_postgres():
             con.execute("""
-              INSERT INTO reservas
-                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
-        if using_postgres():
-                 con.execute("""
                 INSERT INTO reservas
-                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
+                    (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
+            """, (espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo))
         else:
             con.execute("""
                 INSERT INTO reservas
-                (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
+                    (espacio, trabajador, contacto, oficina, fecha, hora_inicio, hora_fin, motivo, creado_en)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                espacio,
-                trabajador,
-                contacto,
-                oficina,
-                fecha,
-                inicio,
-                fin,
-                motivo,
+            """, (
+                espacio, trabajador, contacto, oficina, fecha, inicio, fin, motivo,
                 datetime.now().isoformat(timespec="seconds")
             ))
 
-            con.commit()
+        con.commit()
         flash("Reserva confirmada automáticamente.", "success")
     except Exception:
         con.rollback()
