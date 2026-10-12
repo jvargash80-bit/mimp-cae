@@ -194,26 +194,60 @@
 <script>
 (() => {
   const datos = {
-    "Sala de Sesiones": {foto: "sala-sesiones.png", aforo: 10, equipo: "Proyector"},
-    "Aula 2": {foto: "aula-2.png", aforo: 30, equipo: "Proyector y carpetas"},
-    "Aula 3": {foto: "aula-3.png", aforo: 20, equipo: "Pizarra y sillas"}
+    "Sala de Sesiones": {
+      foto: "{{ url_for('static', filename='fotos/sala-sesiones.png') }}",
+      aforo: 10,
+      equipo: "Proyector"
+    },
+    "Aula 2": {
+      foto: "{{ url_for('static', filename='fotos/aula-2.png') }}",
+      aforo: 30,
+      equipo: "Proyector y carpetas"
+    },
+    "Aula 3": {
+      foto: "{{ url_for('static', filename='fotos/aula-3.png') }}",
+      aforo: 20,
+      equipo: "Pizarra y sillas"
+    }
   };
+
   const selector = document.getElementById("espacio");
   const tarjeta = document.getElementById("detalle-ambiente");
   const foto = document.getElementById("foto-ambiente");
+
   function actualizarFoto() {
     const nombre = selector.value;
     const info = datos[nombre];
-    if (!info) { tarjeta.hidden = true; return; }
-    foto.src = "{{ url_for('static', filename='fotos/') }}" + info.foto;
-    foto.alt = "Fotografía real de " + nombre;
+
+    if (!info) {
+      tarjeta.hidden = true;
+      foto.removeAttribute("src");
+      return;
+    }
+
+    foto.src = info.foto;
+    foto.alt = "Fotografía de " + nombre;
+
     document.getElementById("nombre-ambiente").textContent = nombre;
     document.getElementById("aforo-ambiente").textContent = info.aforo;
     document.getElementById("equipo-ambiente").textContent = info.equipo;
+
     tarjeta.hidden = false;
   }
+
+  foto.addEventListener("error", () => {
+    console.error("No se pudo cargar la fotografía:", foto.src);
+    foto.alt = "No se pudo cargar la fotografía de este ambiente";
+  });
+
   selector.addEventListener("change", actualizarFoto);
-  document.querySelector("form[action=\"{{ url_for('reservar') }}\"]")?.addEventListener("reset", () => setTimeout(actualizarFoto, 0));
+
+  document.querySelector(
+    'form[action="{{ url_for("reservar") }}"]'
+  )?.addEventListener("reset", () => {
+    setTimeout(actualizarFoto, 0);
+  });
+
   actualizarFoto();
 })();
 </script>
