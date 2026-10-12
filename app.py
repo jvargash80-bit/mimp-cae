@@ -28,17 +28,17 @@ AULAS = [
 AFOROS = {
     "Aula 1": 30,
     "Aula 2": 30,
-    "Aula 3": 30,
+    "Aula 3": 20,
     "Sala de Sesiones": 10,
     "Sala de Reuniones": 6,
 }
 
 EQUIPAMIENTO = {
-    "Aula 1": "Proyector y carpetas",
+    "Aula 1": "Se mantiene sin cambios",
     "Aula 2": "Proyector y carpetas",
     "Aula 3": "Pizarra y sillas",
     "Sala de Sesiones": "Proyector",
-    "Sala de Reuniones":"",
+    "Sala de Reuniones": "Se mantiene sin cambios",
 }
 
 ESPACIOS = [x[0] for x in AULAS]
