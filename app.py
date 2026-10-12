@@ -38,7 +38,7 @@ EQUIPAMIENTO = {
     "Aula 2": "Proyector y carpetas",
     "Aula 3": "Pizarra y sillas",
     "Sala de Sesiones": "Proyector",
-    "Sala de Reuniones,
+    "Sala de Reuniones":"",
 }
 
 ESPACIOS = [x[0] for x in AULAS]
