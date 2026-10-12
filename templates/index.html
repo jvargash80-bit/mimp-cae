@@ -1,41 +1,26 @@
-
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>MIMP-CAE | Separación de aulas</title>
-
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <link rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
-
 <header class="topbar">
-
   <div class="logo-ministerio">
-    <img src="{{ url_for('static', filename='ministerio.png') }}"
-         alt="Ministerio de la Mujer y Poblaciones Vulnerables">
+    <img src="{{ url_for('static', filename='ministerio.png') }}" alt="Ministerio de la Mujer y Poblaciones Vulnerables">
   </div>
-
   <div class="titulo-sistema">
     <h1>SEPARACIÓN DE AULAS</h1>
   </div>
-
   <div class="logo-cae">
-    <img src="{{ url_for('static', filename='CAE 22.png') }}"
-         alt="Centro de Altos Estudios">
+    <img src="{{ url_for('static', filename='CAE 22.png') }}" alt="Centro de Altos Estudios">
   </div>
-
 </header>
 
 <main class="container">
-
   <section class="hero">
     <div>
       <p class="eyebrow">GESTIÓN DE ESPACIOS</p>
@@ -43,91 +28,6 @@
       <p>Reserva un aula o salón por horas. Las reservas se confirman automáticamente si el horario está disponible.</p>
     </div>
   </section>
-
-  
-<!-- AVISO: CUIDEMOS NUESTRA INFRAESTRUCTURA -->
-<section class="card aviso-infraestructura">
-
-  <div class="aviso-infraestructura-titulo">
-    <i class="bi bi-building"></i>
-    <h2>CUIDEMOS NUESTRA INFRAESTRUCTURA</h2>
-  </div>
-
-  <div class="aviso-infraestructura-contenido">
-
-    <p>
-      Se solicita a todos los trabajadores dejar las aulas y salas
-      limpias y ordenadas después de cada actividad, colocar las sillas
-      y carpetas en su lugar y cuidar el mobiliario y los equipos institucionales.
-    </p>
-
-    <p>
-      Asimismo, mantener los espacios en buenas condiciones para garantizar
-      un ambiente adecuado para las reuniones y capacitaciones.
-    </p>
-
-    <p class="aviso-infraestructura-final">
-      ¡Cuidemos y mantengamos nuestra infraestructura limpia y ordenada!
-    </p>
-
-  </div>
-
-</section>
-
-<style>
-  .aviso-infraestructura {
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid #e5b7ba;
-  }
-
-  .aviso-infraestructura-titulo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 22px;
-    background-color: #B5121B;
-    color: #ffffff;
-  }
-
-  .aviso-infraestructura-titulo h2 {
-    margin: 0;
-    color: #ffffff;
-    font-size: 19px;
-  }
-
-  .aviso-infraestructura-titulo i {
-    font-size: 26px;
-  }
-
-  .aviso-infraestructura-contenido {
-    padding: 20px 22px;
-    background-color: #FFF7F7;
-    color: #333333;
-    line-height: 1.7;
-  }
-
-  .aviso-infraestructura-contenido p {
-    margin: 0 0 12px;
-  }
-
-  .aviso-infraestructura-contenido .aviso-infraestructura-final {
-    margin-bottom: 0;
-    padding-top: 12px;
-    border-top: 1px solid #e5b7ba;
-    color: #B5121B;
-    font-weight: bold;
-  }
-</style>
-
-<div class="contacto-cae">
-  <p><strong>Coordinaciones y consultas</strong></p>
-  <p>
-    <i class="bi bi-person-lines-fill"></i>
-    Vanessa Cutti · 978 819 674
-  </p>
-</div>
-
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -140,147 +40,78 @@
   {% endwith %}
 
   <div class="grid">
-
     <section class="card form-card">
-
-      <h2>
-        <span class="icono-titulo">
-          <i class="bi bi-calendar2-plus"></i>
-        </span>
-        Nueva reserva
-      </h2>
+      <h2><span class="icono-titulo"><i class="bi bi-calendar2-plus"></i></span> Nueva reserva</h2>
 
       <form action="{{ url_for('reservar') }}" method="post">
+        <label><i class="bi bi-person"></i> Trabajador *</label>
+        <input name="trabajador" placeholder="Nombre y apellido" required>
 
-        <label>
-          <i class="bi bi-person"></i> Trabajador *
-        </label>
-        <input name="trabajador"
-               placeholder="Nombre y apellido"
-               required>
+        <label><i class="bi bi-telephone"></i> N.º de contacto *</label>
+        <input type="tel" name="contacto" placeholder="Ej.: 987654321" required>
 
-        <label>
-          <i class="bi bi-telephone"></i> N.º de contacto *
-        </label>
-        <input type="tel"
-               name="contacto"
-               placeholder="Ej.: 987654321"
-               required>
+        <label><i class="bi bi-building"></i> Oficina solicitante *</label>
+        <input type="text" name="oficina" placeholder="Ej.: Oficina 305" required>
 
-        <label>
-          <i class="bi bi-building"></i> Oficina solicitante *
-        </label>
-        <input type="text"
-               name="oficina"
-               placeholder="Ej.: Oficina 305"
-               required>
-
-        <label>
-          <i class="bi bi-calendar3"></i> Fecha de reserva *
-        </label>
-        <input type="date"
-               name="fecha"
-               value="{{ fecha }}"
-               required>
+        <label><i class="bi bi-calendar3"></i> Fecha de reserva *</label>
+        <input type="date" name="fecha" value="{{ fecha }}" required>
 
         <div class="two">
-
           <div>
-            <label>
-              <i class="bi bi-clock"></i> Hora de inicio *
-            </label>
-            <input type="time"
-                   name="hora_inicio"
-                   required>
+            <label><i class="bi bi-clock"></i> Hora de inicio *</label>
+            <input type="time" name="hora_inicio" required>
           </div>
-
           <div>
-            <label>
-              <i class="bi bi-clock"></i> Hora de término *
-            </label>
-            <input type="time"
-                   name="hora_fin"
-                   required>
+            <label><i class="bi bi-clock"></i> Hora de término *</label>
+            <input type="time" name="hora_fin" required>
           </div>
-
         </div>
 
-        <label>
-          <i class="bi bi-door-open"></i> Aula o salón *
-        </label>
-
-        <select name="espacio" required>
+        <label><i class="bi bi-door-open"></i> Aula o salón *</label>
+        <select name="espacio" id="espacio" required>
           <option value="">Seleccionar...</option>
-
           {% for espacio in espacios %}
             <option value="{{ espacio }}">
-              {{ espacio }}
-              (Aforo: {{ aforos[espacio] }} personas)
-              — {{ equipamiento[espacio] }}
+              {{ espacio }} (Aforo: {{ aforos[espacio] }} personas) — {{ equipamiento[espacio] }}
             </option>
           {% endfor %}
-
         </select>
 
-        <label>
-          <i class="bi bi-file-text"></i> Motivo / actividad
-        </label>
-        <textarea name="motivo"
-                  rows="3"
-                  placeholder="Ej.: reunión, capacitación, taller..."></textarea>
+        <div id="detalle-ambiente" class="detalle-ambiente" hidden aria-live="polite">
+          <img id="foto-ambiente" src="" alt="Fotografía del ambiente seleccionado">
+          <div class="detalle-ambiente-texto">
+            <h3 id="nombre-ambiente"></h3>
+            <p><strong>Aforo:</strong> <span id="aforo-ambiente"></span> personas</p>
+            <p><strong>Equipamiento:</strong> <span id="equipo-ambiente"></span></p>
+          </div>
+        </div>
+        <label><i class="bi bi-file-text"></i> Motivo / actividad</label>
+        <textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
 
-        <button type="reset" class="btn-limpiar">
-          <i class="bi bi-arrow-counterclockwise"></i>
-          Limpiar formulario
-        </button>
-
-        <button type="submit">
-          <i class="bi bi-send-fill"></i>
-          Confirmar reserva
-        </button>
-
+        <button type="reset" class="btn-limpiar"><i class="bi bi-arrow-counterclockwise"></i> Limpiar formulario</button>
+        <button type="submit"><i class="bi bi-send-fill"></i> Confirmar reserva</button>
       </form>
-
     </section>
 
     <section class="card">
-
       <div class="section-head">
-
-        <div>
-          <h2>Reservas del día</h2>
-          <p>{{ fecha }}</p>
-        </div>
-
+        <div><h2>Reservas del día</h2><p>{{ fecha }}</p></div>
         <form method="get">
-          <input type="date"
-                 name="fecha"
-                 value="{{ fecha }}">
+          <input type="date" name="fecha" value="{{ fecha }}">
           <button class="secondary">Ver fecha</button>
         </form>
-
       </div>
 
       {% if reservas %}
-
         <div class="table-wrap">
-
           <table>
-
             <thead>
               <tr>
-                <th>Aula o salón</th>
-                <th>Horario</th>
-                <th>Trabajador</th>
-                <th>Contacto</th>
-                <th>Oficina</th>
-                <th>Actividad</th>
-                <th></th>
+                <th>Aula o salón</th><th>Horario</th><th>Trabajador</th>
+                <th>Contacto</th><th>Oficina</th><th>Actividad</th><th></th>
               </tr>
             </thead>
-
             <tbody>
-
               {% for r in reservas %}
                 <tr>
                   <td><b>{{ r['espacio'] }}</b></td>
@@ -289,126 +120,129 @@
                   <td>{{ r['contacto'] }}</td>
                   <td>{{ r['oficina'] }}</td>
                   <td>{{ r['motivo'] or '—' }}</td>
-
                   <td>
-                    <form
-                      action="{{ url_for('eliminar', reserva_id=r['id']) }}"
-                      method="post">
+                    <form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post">
                       <button type="submit">Cancelar</button>
                     </form>
                   </td>
                 </tr>
               {% endfor %}
-
             </tbody>
-
           </table>
-
         </div>
-
       {% else %}
-
-        <div class="empty">
-          No hay reservas para esta fecha.
-        </div>
-
+        <div class="empty">No hay reservas para esta fecha.</div>
       {% endif %}
-
     </section>
-
   </div>
 
   <section class="card disponibilidad-card">
-
     <div class="section-head">
-
       <div>
         <h2>Disponibilidad de espacios</h2>
         <p>Consulta los horarios disponibles para la fecha seleccionada.</p>
       </div>
-
       <div class="leyenda">
         <span class="disponible">● Disponible</span>
         <span class="reservado">● Reservado</span>
       </div>
-
     </div>
 
     <div class="table-wrap">
-
       <table class="tabla-disponibilidad">
-
         <thead>
           <tr>
-            <th>Aula o salón</th>
-            <th>Aforo</th>
-            <th>Equipamiento</th>
-
+            <th>Aula o salón</th><th>Aforo</th><th>Equipamiento</th>
             {% for inicio, fin in horarios %}
               <th>{{ inicio }}<br>{{ fin }}</th>
             {% endfor %}
-
           </tr>
         </thead>
-
         <tbody>
-
           {% for fila in disponibilidad %}
-
             <tr>
-
-              <td>
-                <strong>{{ fila.espacio }}</strong>
-              </td>
-
-              <td>
-                {{ fila.aforo }} personas
-              </td>
-
-              <td>
-                {{ fila.equipamiento }}
-              </td>
-
+              <td><strong>{{ fila.espacio }}</strong></td>
+              <td>{{ fila.aforo }} personas</td>
+              <td>{{ fila.equipamiento }}</td>
               {% for horario in fila.horarios %}
-
                 <td>
-
                   {% if horario.estado == "Reservado" %}
-
-                    <div class="estado reservado">
-                      🔴 Reservado
-                      <small>{{ horario.trabajador }}</small>
-                    </div>
-
+                    <div class="estado reservado">🔴 Reservado<small>{{ horario.trabajador }}</small></div>
                   {% else %}
-
-                    <div class="estado disponible">
-                      🟢 Disponible
-                    </div>
-
+                    <div class="estado disponible">🟢 Disponible</div>
                   {% endif %}
-
                 </td>
-
               {% endfor %}
-
             </tr>
-
           {% endfor %}
-
         </tbody>
-
       </table>
-
     </div>
-
   </section>
-
 </main>
 
-<footer>
-  MIMP-CAE · Sistema de separación de espacios
-</footer>
+<footer>MIMP-CAE · Sistema de separación de espacios</footer>
+<style>
+.detalle-ambiente{margin:14px 0 18px;border:1px solid #e3e6eb;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.detalle-ambiente[hidden]{display:none}
+.detalle-ambiente img{display:block;width:100%;max-height:300px;object-fit:contain;background:#f5f6f8}
+.detalle-ambiente-texto{padding:12px 15px}
+.detalle-ambiente-texto h3{margin:0 0 8px;color:#b5122b}
+.detalle-ambiente-texto p{margin:5px 0}
+</style>
 
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selector = document.getElementById("espacio");
+  const tarjeta = document.getElementById("detalle-ambiente");
+  const foto = document.getElementById("foto-ambiente");
+
+  const datos = {
+    "Sala de Sesiones": {
+      foto: "{{ url_for('static', filename='sala-sesiones.png') }}",
+      aforo: 10,
+      equipo: "Proyector"
+    },
+    "Aula 2": {
+      foto: "{{ url_for('static', filename='aula-2.png') }}",
+      aforo: 30,
+      equipo: "Proyector y carpetas"
+    },
+    "Aula 3": {
+      foto: "{{ url_for('static', filename='aula-3.png') }}",
+      aforo: 20,
+      equipo: "Pizarra y sillas"
+    }
+  };
+
+  function actualizarFoto() {
+    const nombre = selector.value;
+    const info = datos[nombre];
+
+    if (!info) {
+      tarjeta.hidden = true;
+      foto.removeAttribute("src");
+      return;
+    }
+
+    document.getElementById("nombre-ambiente").textContent = nombre;
+    document.getElementById("aforo-ambiente").textContent = info.aforo;
+    document.getElementById("equipo-ambiente").textContent = info.equipo;
+
+    foto.onerror = function () {
+      console.error("No se pudo cargar la foto:", foto.src);
+    };
+
+    foto.src = info.foto;
+    foto.alt = "Fotografía de " + nombre;
+    tarjeta.hidden = false;
+  }
+
+  selector.addEventListener("change", actualizarFoto);
+  actualizarFoto();
+});
+</script>
 </body>
 </html>
