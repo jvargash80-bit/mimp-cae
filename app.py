@@ -34,11 +34,11 @@ AFOROS = {
 }
 
 EQUIPAMIENTO = {
-    "Aula 1": "Se mantiene sin cambios",
-    "Aula 2": "Se mantiene sin cambios",
+    "Aula 1": "Proyector y carpetas",
+    "Aula 2": "Proyector y carpetas",
     "Aula 3": "Pizarra y sillas",
     "Sala de Sesiones": "Proyector",
-    "Sala de Reuniones": "Se mantiene sin cambios",
+    "Sala de Reuniones,
 }
 
 ESPACIOS = [x[0] for x in AULAS]
