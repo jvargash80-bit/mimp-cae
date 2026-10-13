@@ -60,7 +60,8 @@
     <section class="card form-card">
       <h2><span class="icono-titulo"><i class="bi bi-calendar2-plus"></i></span> Nueva reserva</h2>
 
-      <form action="{{ url_for('reservar') }}" method="post">
+      <form action="{{ url_for('reservar') }}" method="post"
+      onsubmit="return mostrarRecomendaciones(event, this);">
         <label><i class="bi bi-person"></i> Trabajador *</label>
         <input name="trabajador" placeholder="Nombre y apellido" required>
 
@@ -197,7 +198,7 @@
     </div>
   </section>
 </main>
-  <section class="card" style="margin-top: 24px; border-top: 4px solid #c8102e;">
+<section class="card" style="margin-top: 24px; border-top: 4px solid #c8102e;">
   <h2 style="color: #c8102e;">Coordinaciones y consultas</h2>
   <p>Para coordinaciones y consultas sobre la separación de aulas, contactar a Vanessa Cutti.</p>
 
@@ -212,7 +213,6 @@
     y capacitaciones.
   </p>
 </section>
-
 <footer>MIMP-CAE · Sistema de separación de espacios</footer>
 <style>
 .detalle-ambiente{margin:14px 0 18px;border:1px solid #e3e6eb;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06)}
@@ -237,13 +237,11 @@ document.addEventListener("DOMContentLoaded", function () {
       aforo: 10,
       equipo: "Proyector"
     },
-    
-  "Aula 1": {
+    "Aula 1": {
   foto: "{{ url_for('static', filename='Aula 1.jpeg') }}",
   aforo: 30,
   equipo: "Proyector y carpetas"
 },
-
     "Aula 2": {
       foto: "{{ url_for('static', filename='aula-2.png') }}",
       aforo: 30,
@@ -253,12 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
       foto: "{{ url_for('static', filename='aula-3.png') }}",
       aforo: 20,
       equipo: "Pizarra y sillas"
-    },
-    "Sala de Reuniones": {
-  foto: "{{ url_for('static', filename='sala_reuniones.jpeg') }}",
-  aforo: 6,
-  equipo: ""
-},
+    }
   };
 
   function actualizarFoto() {
@@ -291,8 +284,13 @@ document.addEventListener("DOMContentLoaded", function () {
   ```html
 <!-- POP-UP DE RECOMENDACIONES MIMP-CAE -->
 <div id="modalRecomendaciones" class="modal-recomendaciones">
-  <div class="contenido-modal">
-    <h2>RECOMENDACIONES PARA EL USO DE LAS AULAS</h2>
+  <div class="contenido-modal" role="dialog"
+       aria-modal="true"
+       aria-labelledby="tituloRecomendaciones">
+
+    <h2 id="tituloRecomendaciones">
+      RECOMENDACIONES PARA EL USO DE LAS AULAS
+    </h2>
 
     <p>Antes de confirmar su reserva, tenga en cuenta lo siguiente:</p>
 
@@ -304,12 +302,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <div class="contacto-modal">
       <p><strong>¿Tiene algún inconveniente?</strong></p>
-      <p>Comuníquese con Vanessa C. al
+      <p>
+        Comuníquese con Vanessa Cutti al
         <a href="tel:978819674">978 819 674</a>.
       </p>
 
       <p><strong>¿Tiene alguna sugerencia?</strong></p>
-      <p>Escríbanos a:
+      <p>
+        Escríbanos a:
         <a href="mailto:jvargash8@gmail.com">
           jvargash8@gmail.com
         </a>
@@ -323,11 +323,13 @@ document.addEventListener("DOMContentLoaded", function () {
     </p>
 
     <div class="botones-modal">
-      <button type="button" onclick="cerrarRecomendaciones()">
+      <button type="button" class="btn-volver"
+              onclick="cerrarRecomendaciones()">
         Volver
       </button>
 
-      <button type="button" onclick="aceptarRecomendaciones()">
+      <button type="button" class="btn-aceptar"
+              onclick="aceptarRecomendaciones()">
         Aceptar y confirmar
       </button>
     </div>
@@ -357,9 +359,13 @@ document.addEventListener("DOMContentLoaded", function () {
   box-shadow: 0 5px 25px rgba(0,0,0,.25);
 }
 
-.contenido-modal h2 {
-  color: #b91c1c;
+.contenido-modal h2,
+.contenido-modal h3 {
+  color: #c8102e;
   text-align: center;
+}
+
+.contenido-modal h2 {
   font-size: 21px;
 }
 
@@ -377,12 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 .contacto-modal a {
   color: #1d4ed8;
-}
-
-.contenido-modal h3 {
-  color: #b91c1c;
-  text-align: center;
-  margin-top: 20px;
 }
 
 .nota-modal {
@@ -406,43 +406,64 @@ document.addEventListener("DOMContentLoaded", function () {
   font-weight: bold;
 }
 
-.botones-modal button:first-child {
+.btn-volver {
   background: #e5e7eb;
   color: #374151;
 }
 
-.botones-modal button:last-child {
+.btn-aceptar {
   background: #2563eb;
   color: white;
+}
+
+@media (max-width: 480px) {
+  .contenido-modal {
+    padding: 18px;
+  }
+
+  .botones-modal {
+    flex-direction: column;
+  }
 }
 </style>
 
 <script>
 let formularioReservaPendiente = null;
 
-function mostrarRecomendaciones(formulario) {
+function mostrarRecomendaciones(evento, formulario) {
+  // Evita enviar el formulario antes de mostrar el pop-up.
+  evento.preventDefault();
+
+  // Comprueba los campos obligatorios.
+  if (!formulario.checkValidity()) {
+    formulario.reportValidity();
+    return false;
+  }
+
   formularioReservaPendiente = formulario;
+
   document.getElementById("modalRecomendaciones")
     .style.display = "flex";
+
+  return false;
 }
 
 function cerrarRecomendaciones() {
   document.getElementById("modalRecomendaciones")
     .style.display = "none";
+
   formularioReservaPendiente = null;
 }
 
 function aceptarRecomendaciones() {
   const formulario = formularioReservaPendiente;
 
-  document.getElementById("modalRecomendaciones")
-    .style.display = "none";
+  if (!formulario) return;
 
-  formularioReservaPendiente = null;
+  cerrarRecomendaciones();
 
-  if (formulario) {
-    formulario.requestSubmit();
-  }
+  // Envía la reserva al servidor Flask.
+  formulario.requestSubmit();
 }
 </script>
 ```
