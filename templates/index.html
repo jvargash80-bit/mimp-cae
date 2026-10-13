@@ -288,5 +288,163 @@ document.addEventListener("DOMContentLoaded", function () {
   actualizarFoto();
 });
 </script>
+  ```html
+<!-- POP-UP DE RECOMENDACIONES MIMP-CAE -->
+<div id="modalRecomendaciones" class="modal-recomendaciones">
+  <div class="contenido-modal">
+    <h2>RECOMENDACIONES PARA EL USO DE LAS AULAS</h2>
+
+    <p>Antes de confirmar su reserva, tenga en cuenta lo siguiente:</p>
+
+    <ul>
+      <li>Dejar el aula o sala limpia y ordenada después de su uso.</li>
+      <li>Cuidar el proyector, el mobiliario y los equipos institucionales.</li>
+      <li>Respetar el horario de inicio y término de la reserva.</li>
+    </ul>
+
+    <div class="contacto-modal">
+      <p><strong>¿Tiene algún inconveniente?</strong></p>
+      <p>Comuníquese con Vanessa C. al
+        <a href="tel:978819674">978 819 674</a>.
+      </p>
+
+      <p><strong>¿Tiene alguna sugerencia?</strong></p>
+      <p>Escríbanos a:
+        <a href="mailto:jvargash8@gmail.com">
+          jvargash8@gmail.com
+        </a>
+      </p>
+    </div>
+
+    <h3>¡CUIDEMOS NUESTRA INFRAESTRUCTURA!</h3>
+
+    <p class="nota-modal">
+      Gracias por contribuir al cuidado de nuestros espacios institucionales.
+    </p>
+
+    <div class="botones-modal">
+      <button type="button" onclick="cerrarRecomendaciones()">
+        Volver
+      </button>
+
+      <button type="button" onclick="aceptarRecomendaciones()">
+        Aceptar y confirmar
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal-recomendaciones {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.contenido-modal {
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.25);
+}
+
+.contenido-modal h2 {
+  color: #b91c1c;
+  text-align: center;
+  font-size: 21px;
+}
+
+.contenido-modal li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.contacto-modal {
+  background: #f5f6f8;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.contacto-modal a {
+  color: #1d4ed8;
+}
+
+.contenido-modal h3 {
+  color: #b91c1c;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.nota-modal {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+.botones-modal {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.botones-modal button {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botones-modal button:first-child {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.botones-modal button:last-child {
+  background: #2563eb;
+  color: white;
+}
+</style>
+
+<script>
+let formularioReservaPendiente = null;
+
+function mostrarRecomendaciones(formulario) {
+  formularioReservaPendiente = formulario;
+  document.getElementById("modalRecomendaciones")
+    .style.display = "flex";
+}
+
+function cerrarRecomendaciones() {
+  document.getElementById("modalRecomendaciones")
+    .style.display = "none";
+  formularioReservaPendiente = null;
+}
+
+function aceptarRecomendaciones() {
+  const formulario = formularioReservaPendiente;
+
+  document.getElementById("modalRecomendaciones")
+    .style.display = "none";
+
+  formularioReservaPendiente = null;
+
+  if (formulario) {
+    formulario.requestSubmit();
+  }
+}
+</script>
+```
 </body>
 </html>
