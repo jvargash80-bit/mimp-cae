@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MIMP-CAE | Separación de aulas</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="logo-ministerio">
+    <img src="{{ url_for('static', filename='ministerio.png') }}" alt="Ministerio de la Mujer y Poblaciones Vulnerables">
+  </div>
+  <div class="titulo-sistema">
+    <h1>SEPARACIÓN DE AULAS</h1>
+  </div>
+  <div class="logo-cae">
+    <img src="{{ url_for('static', filename='CAE 22.png') }}" alt="Centro de Altos Estudios">
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      
+<section class="card" style="margin-bottom: 24px; border-top: 4px solid #c8102e;">
+  <h2 style="color: #c8102e;">Coordinaciones y consultas</h2>
+  <p>Para coordinaciones y consultas sobre la separación de aulas, contactar a Vanessa Cutti.</p>
+
+  <hr style="border: 0; border-top: 2px solid #c8102e; margin: 20px 0;">
+
+  <h2 style="color: #c8102e;">CUIDEMOS NUESTRA INFRAESTRUCTURA</h2>
+  <p>
+    Se solicita a todos los trabajadores dejar las aulas y salas limpias
+    y ordenadas después de cada actividad, colocar las sillas y carpetas
+    en su lugar y cuidar el mobiliario y los equipos institucionales.
+    Mantengamos estos espacios en buenas condiciones para las reuniones
+    y capacitaciones.
+  </p>
+</section>
+
+      <p class="eyebrow">GESTIÓN DE ESPACIOS</p>
+      <h1>Separación de aulas</h1>
+      <p>Reserva un aula o salón por horas. Las reservas se confirman automáticamente si el horario está disponible.</p>
+    </div>
+  </section>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages">
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="grid">
+    <section class="card form-card">
+      <h2><span class="icono-titulo"><i class="bi bi-calendar2-plus"></i></span> Nueva reserva</h2>
+
+      <form id="formularioReserva" action="{{ url_for('reservar') }}" method="post" onsubmit="return mostrarRecomendaciones(event, this);">
+        <label><i class="bi bi-person"></i> Trabajador *</label>
+        <input name="trabajador" placeholder="Nombre y apellido" required>
+
+        <label><i class="bi bi-telephone"></i> N.º de contacto *</label>
+        <input type="tel" name="contacto" placeholder="Ej.: 987654321" required>
+
+        <label><i class="bi bi-building"></i> Oficina solicitante *</label>
+        <input type="text" name="oficina" placeholder="Ej.: Oficina 305" required>
+
+        <label><i class="bi bi-calendar3"></i> Fecha de reserva *</label>
+        <input type="date" name="fecha" value="{{ fecha }}" required>
+
+        <div class="two">
+          <div>
+            <label><i class="bi bi-clock"></i> Hora de inicio *</label>
+            <input type="time" name="hora_inicio" required>
+          </div>
+          <div>
+            <label><i class="bi bi-clock"></i> Hora de término *</label>
+            <input type="time" name="hora_fin" required>
+          </div>
+        </div>
+
+        <label><i class="bi bi-door-open"></i> Aula o salón *</label>
+        <select name="espacio" id="espacio" required>
+          <option value="">Seleccionar...</option>
+          {% for espacio in espacios %}
+            <option value="{{ espacio }}">
+              {{ espacio }} (Aforo: {{ aforos[espacio] }} personas) — {{ equipamiento[espacio] }}
+            </option>
+          {% endfor %}
+        </select>
+
+        <div id="detalle-ambiente" class="detalle-ambiente" hidden aria-live="polite">
+          <img id="foto-ambiente" src="" alt="Fotografía del ambiente seleccionado">
+          <div class="detalle-ambiente-texto">
+            <h3 id="nombre-ambiente"></h3>
+            <p><strong>Aforo:</strong> <span id="aforo-ambiente"></span> personas</p>
+            <p><strong>Equipamiento:</strong> <span id="equipo-ambiente"></span></p>
+          </div>
+        </div>
+        <label><i class="bi bi-file-text"></i> Motivo / actividad</label>
+        <textarea name="motivo" rows="3" placeholder="Ej.: reunión, capacitación, taller..."></textarea>
+
+        <button type="reset" class="btn-limpiar"><i class="bi bi-arrow-counterclockwise"></i> Limpiar formulario</button>
+        <button type="submit"><i class="bi bi-send-fill"></i> Confirmar reserva</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div><h2>Reservas del día</h2><p>{{ fecha }}</p></div>
+        <form method="get">
+          <input type="date" name="fecha" value="{{ fecha }}">
+          <button class="secondary">Ver fecha</button>
+        </form>
+      </div>
+
+      {% if reservas %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Aula o salón</th><th>Horario</th><th>Trabajador</th>
+                <th>Contacto</th><th>Oficina</th><th>Actividad</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in reservas %}
+                <tr>
+                  <td><b>{{ r['espacio'] }}</b></td>
+                  <td>{{ r['hora_inicio'] }} – {{ r['hora_fin'] }}</td>
+                  <td>{{ r['trabajador'] }}</td>
+                  <td>{{ r['contacto'] }}</td>
+                  <td>{{ r['oficina'] }}</td>
+                  <td>{{ r['motivo'] or '—' }}</td>
+                  <td>
+                    <form action="{{ url_for('eliminar', reserva_id=r['id']) }}" method="post">
+                      <button type="submit">Cancelar</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty">No hay reservas para esta fecha.</div>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="card disponibilidad-card">
+    <div class="section-head">
+      <div>
+        <h2>Disponibilidad de espacios</h2>
+        <p>Consulta los horarios disponibles para la fecha seleccionada.</p>
+      </div>
+      <div class="leyenda">
+        <span class="disponible">● Disponible</span>
+        <span class="reservado">● Reservado</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="tabla-disponibilidad">
+        <thead>
+          <tr>
+            <th>Aula o salón</th><th>Aforo</th><th>Equipamiento</th>
+            {% for inicio, fin in horarios %}
+              <th>{{ inicio }}<br>{{ fin }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for fila in disponibilidad %}
+            <tr>
+              <td><strong>{{ fila.espacio }}</strong></td>
+              <td>{{ fila.aforo }} personas</td>
+              <td>{{ fila.equipamiento }}</td>
+              {% for horario in fila.horarios %}
+                <td>
+                  {% if horario.estado == "Reservado" %}
+                    <div class="estado reservado">🔴 Reservado<small>{{ horario.trabajador }}</small></div>
+                  {% else %}
+                    <div class="estado disponible">🟢 Disponible</div>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+  <section class="card" style="margin-top: 24px; border-top: 4px solid #c8102e;">
+  <h2 style="color: #c8102e;">Coordinaciones y consultas</h2>
+  <p>Para coordinaciones y consultas sobre la separación de aulas, contactar a Vanessa Cutti.</p>
+
+  <hr style="border: 0; border-top: 2px solid #c8102e; margin: 20px 0;">
+
+  <h2 style="color: #c8102e;">CUIDEMOS NUESTRA INFRAESTRUCTURA</h2>
+  <p>
+    Se solicita a todos los trabajadores dejar las aulas y salas limpias
+    y ordenadas después de cada actividad, colocar las sillas y carpetas
+    en su lugar y cuidar el mobiliario y los equipos institucionales.
+    Mantengamos estos espacios en buenas condiciones para las reuniones
+    y capacitaciones.
+  </p>
+</section>
+
+<footer>MIMP-CAE · Sistema de separación de espacios</footer>
+<style>
+.detalle-ambiente{margin:14px 0 18px;border:1px solid #e3e6eb;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.detalle-ambiente[hidden]{display:none}
+.detalle-ambiente img{display:block;width:100%;max-height:300px;object-fit:contain;background:#f5f6f8}
+.detalle-ambiente-texto{padding:12px 15px}
+.detalle-ambiente-texto h3{margin:0 0 8px;color:#b5122b}
+.detalle-ambiente-texto p{margin:5px 0}
+</style>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selector = document.getElementById("espacio");
+  const tarjeta = document.getElementById("detalle-ambiente");
+  const foto = document.getElementById("foto-ambiente");
+
+  const datos = {
+    "Sala de Sesiones": {
+      foto: "{{ url_for('static', filename='sala-sesiones.png') }}",
+      aforo: 10,
+      equipo: "Proyector"
+    },
+    
+  "Aula 1": {
+  foto: "{{ url_for('static', filename='Aula 1.jpeg') }}",
+  aforo: 30,
+  equipo: "Proyector y carpetas"
+},
+
+    "Aula 2": {
+      foto: "{{ url_for('static', filename='aula-2.png') }}",
+      aforo: 30,
+      equipo: "Proyector y carpetas"
+    },
+    "Aula 3": {
+      foto: "{{ url_for('static', filename='aula-3.png') }}",
+      aforo: 20,
+      equipo: "Pizarra y sillas"
+    },
+    "Sala de Reuniones": {
+  foto: "{{ url_for('static', filename='sala_reuniones.jpeg') }}",
+  aforo: 6,
+  equipo: ""
+},
+  };
+
+  function actualizarFoto() {
+    const nombre = selector.value;
+    const info = datos[nombre];
+
+    if (!info) {
+      tarjeta.hidden = true;
+      foto.removeAttribute("src");
+      return;
+    }
+
+    document.getElementById("nombre-ambiente").textContent = nombre;
+    document.getElementById("aforo-ambiente").textContent = info.aforo;
+    document.getElementById("equipo-ambiente").textContent = info.equipo;
+
+    foto.onerror = function () {
+      console.error("No se pudo cargar la foto:", foto.src);
+    };
+
+    foto.src = info.foto;
+    foto.alt = "Fotografía de " + nombre;
+    tarjeta.hidden = false;
+  }
+
+  selector.addEventListener("change", actualizarFoto);
+  actualizarFoto();
+});
+</script>
+<!-- POP-UP DE RECOMENDACIONES MIMP-CAE -->
+<div id="modalRecomendaciones" class="modal-recomendaciones">
+  <div class="contenido-modal">
+    <h2>RECOMENDACIONES PARA EL USO DE LAS AULAS</h2>
+
+    <p>Antes de confirmar su reserva, tenga en cuenta lo siguiente:</p>
+
+    <ul>
+      <li>Dejar el aula o sala limpia y ordenada después de su uso.</li>
+      <li>Cuidar el proyector, el mobiliario y los equipos institucionales.</li>
+      <li>Respetar el horario de inicio y término de la reserva.</li>
+    </ul>
+
+    <div class="contacto-modal">
+      <p><strong>¿Tiene algún inconveniente?</strong></p>
+      <p>Comuníquese con Vanessa C. al
+        <a href="tel:978819674">978 819 674</a>.
+      </p>
+
+      <p><strong>¿Tiene alguna sugerencia?</strong></p>
+      <p>Escríbanos a:
+        <a href="mailto:jvargash8@gmail.com">
+          jvargash8@gmail.com
+        </a>
+      </p>
+    </div>
+
+    <h3>¡CUIDEMOS NUESTRA INFRAESTRUCTURA!</h3>
+
+    <p class="nota-modal">
+      Gracias por contribuir al cuidado de nuestros espacios institucionales.
+    </p>
+
+    <div class="botones-modal">
+      <button type="button" onclick="cerrarRecomendaciones()">
+        Volver
+      </button>
+
+      <button type="button" onclick="aceptarRecomendaciones()">
+        Aceptar y confirmar
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal-recomendaciones {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.contenido-modal {
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.25);
+}
+
+.contenido-modal h2 {
+  color: #b91c1c;
+  text-align: center;
+  font-size: 21px;
+}
+
+.contenido-modal li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.contacto-modal {
+  background: #f5f6f8;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.contacto-modal a {
+  color: #1d4ed8;
+}
+
+.contenido-modal h3 {
+  color: #b91c1c;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.nota-modal {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+.botones-modal {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.botones-modal button {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botones-modal button:first-child {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.botones-modal button:last-child {
+  background: #2563eb;
+  color: white;
+}
+</style>
+
+<script>
+let formularioReservaPendiente = null;
+let recomendacionesAceptadas = false;
+
+function mostrarRecomendaciones(event, formulario) {
+  // Cuando el usuario acepta, permitir el envío real del formulario.
+  if (recomendacionesAceptadas) {
+    recomendacionesAceptadas = false;
+    return true;
+  }
+
+  // La validación de campos obligatorios del navegador ocurre antes de este evento.
+  event.preventDefault();
+  formularioReservaPendiente = formulario;
+  document.getElementById("modalRecomendaciones").style.display = "flex";
+  return false;
+}
+
+function cerrarRecomendaciones() {
+  document.getElementById("modalRecomendaciones").style.display = "none";
+  formularioReservaPendiente = null;
+}
+
+function aceptarRecomendaciones() {
+  const formulario = formularioReservaPendiente;
+  document.getElementById("modalRecomendaciones").style.display = "none";
+  formularioReservaPendiente = null;
+
+  if (formulario) {
+    recomendacionesAceptadas = true;
+    formulario.requestSubmit();
+  }
+}
+
+// Permite cerrar la ventana al hacer clic en el fondo oscuro.
+document.getElementById("modalRecomendaciones").addEventListener("click", function (event) {
+  if (event.target === this) cerrarRecomendaciones();
+});
+</script>
+</body>
+</html>
