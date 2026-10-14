@@ -562,14 +562,11 @@ document.addEventListener("DOMContentLoaded", function () {
 let formularioReservaPendiente = null;
 let confirmacionAceptada = false;
 
-function mostrarRecomendaciones(evento, formulario) {
-  // Si ya aceptó las recomendaciones, permitir el envío.
-  if (confirmacionAceptada) {
-    confirmacionAceptada = false;
-    return true;
-  }
 
-  // Detener el envío para mostrar primero la ventana.
+<script>
+let formularioReservaPendiente = null;
+
+function mostrarRecomendaciones(evento, formulario) {
   evento.preventDefault();
 
   // Validar los campos obligatorios.
@@ -603,15 +600,16 @@ function aceptarRecomendaciones() {
     return;
   }
 
-  cerrarRecomendaciones();
+  // Cerrar el pop-up.
+  document.getElementById("modalRecomendaciones").style.display = "none";
+  formularioReservaPendiente = null;
 
-  // Evitar que el formulario vuelva a abrir el pop-up.
-  confirmacionAceptada = true;
-
-  // Enviar la reserva a Flask.
-  formulario.requestSubmit();
+  // Enviar el formulario sin volver a ejecutar onsubmit.
+  // Los campos obligatorios ya fueron validados.
+  HTMLFormElement.prototype.submit.call(formulario);
 }
 </script>
+
 
 </body>
 </html>
