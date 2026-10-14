@@ -478,10 +478,10 @@
       </button>
 
       <button type="button"
-              class="btn-aceptar"
-              onclick="aceptarRecomendaciones()">
-        Aceptar y confirmar
-      </button>
+        class="btn-aceptar"
+        id="btnAceptarReserva">
+  Aceptar y confirmar
+</button>
     </div>
   </div>
 </div>
@@ -563,50 +563,59 @@ let formularioReservaPendiente = null;
 let confirmacionAceptada = false;
 
 
+
 <script>
 let formularioReservaPendiente = null;
 
-function mostrarRecomendaciones(evento, formulario) {
-  evento.preventDefault();
-
-  // Validar los campos obligatorios.
-  if (!formulario.checkValidity()) {
-    formulario.reportValidity();
-    return false;
-  }
-
+document.addEventListener("DOMContentLoaded", function () {
+  const formulario = document.getElementById("formularioReserva");
   const modal = document.getElementById("modalRecomendaciones");
+  const botonAceptar = document.getElementById("btnAceptarReserva");
 
-  if (!modal) {
-    alert("No se encontró la ventana de recomendaciones.");
-    return false;
+  if (!formulario || !modal || !botonAceptar) {
+    console.error("Falta el formulario, el pop-up o el botón de aceptar.");
+    return;
   }
 
-  formularioReservaPendiente = formulario;
-  modal.style.display = "flex";
+  formulario.addEventListener("submit", function (evento) {
+    if (formulario.dataset.confirmado === "si") {
+      return;
+    }
 
-  return false;
+    evento.preventDefault();
+
+    if (!formulario.checkValidity()) {
+      formulario.reportValidity();
+      return;
+    }
+
+    formularioReservaPendiente = formulario;
+    modal.style.display = "flex";
+  });
+
+  botonAceptar.addEventListener("click", function () {
+    if (!formularioReservaPendiente) return;
+
+    const formularioEnviar = formularioReservaPendiente;
+
+    // Evitar que se abra nuevamente el pop-up.
+    formularioEnviar.dataset.confirmado = "si";
+    modal.style.display = "none";
+    formularioReservaPendiente = null;
+
+    // Enviar la reserva a Flask.
+    formularioEnviar.requestSubmit();
+  });
+});
+
+function mostrarRecomendaciones(evento, formulario) {
+  // El evento principal lo controla el listener anterior.
+  return true;
 }
 
 function cerrarRecomendaciones() {
   document.getElementById("modalRecomendaciones").style.display = "none";
   formularioReservaPendiente = null;
-}
-
-function aceptarRecomendaciones() {
-  const formulario = formularioReservaPendiente;
-
-  if (!formulario) {
-    return;
-  }
-
-  // Cerrar el pop-up.
-  document.getElementById("modalRecomendaciones").style.display = "none";
-  formularioReservaPendiente = null;
-
-  // Enviar el formulario sin volver a ejecutar onsubmit.
-  // Los campos obligatorios ya fueron validados.
-  HTMLFormElement.prototype.submit.call(formulario);
 }
 </script>
 
