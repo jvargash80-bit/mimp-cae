@@ -328,10 +328,11 @@ document.addEventListener("DOMContentLoaded", function () {
         Volver
       </button>
 
-      <button type="button" class="btn-aceptar"
-              onclick="aceptarRecomendaciones()">
-        Aceptar y confirmar
-      </button>
+     <button type="button"
+        class="btn-aceptar"
+        id="btnAceptarReserva">
+  Aceptar y confirmar
+</button>
     </div>
   </div>
 </div>
@@ -427,45 +428,62 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </style>
 
+
 <script>
 let formularioReservaPendiente = null;
 
-function mostrarRecomendaciones(evento, formulario) {
-  // Evita enviar el formulario antes de mostrar el pop-up.
-  evento.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+  const formulario = document.getElementById("formularioReserva");
+  const modal = document.getElementById("modalRecomendaciones");
+  const botonAceptar = document.getElementById("btnAceptarReserva");
 
-  // Comprueba los campos obligatorios.
-  if (!formulario.checkValidity()) {
-    formulario.reportValidity();
-    return false;
+  if (!formulario || !modal || !botonAceptar) {
+    console.error("Falta el formulario, el pop-up o el botón de aceptar.");
+    return;
   }
 
-  formularioReservaPendiente = formulario;
+  formulario.addEventListener("submit", function (evento) {
+    if (formulario.dataset.confirmado === "si") {
+      return;
+    }
 
-  document.getElementById("modalRecomendaciones")
-    .style.display = "flex";
+    evento.preventDefault();
 
-  return false;
+    if (!formulario.checkValidity()) {
+      formulario.reportValidity();
+      return;
+    }
+
+    formularioReservaPendiente = formulario;
+    modal.style.display = "flex";
+  });
+
+  botonAceptar.addEventListener("click", function () {
+    if (!formularioReservaPendiente) return;
+
+    const formularioEnviar = formularioReservaPendiente;
+
+    // Evitar que se abra nuevamente el pop-up.
+    formularioEnviar.dataset.confirmado = "si";
+    modal.style.display = "none";
+    formularioReservaPendiente = null;
+
+    // Enviar la reserva a Flask.
+    formularioEnviar.requestSubmit();
+  });
+});
+
+function mostrarRecomendaciones(evento, formulario) {
+  // El evento principal lo controla el listener anterior.
+  return true;
 }
 
 function cerrarRecomendaciones() {
-  document.getElementById("modalRecomendaciones")
-    .style.display = "none";
-
+  document.getElementById("modalRecomendaciones").style.display = "none";
   formularioReservaPendiente = null;
 }
-
-function aceptarRecomendaciones() {
-  const formulario = formularioReservaPendiente;
-
-  if (!formulario) return;
-
-  cerrarRecomendaciones();
-
-  // Envía la reserva al servidor Flask.
-  formulario.requestSubmit();
-}
 </script>
+
 ```
 </body>
 </html>
