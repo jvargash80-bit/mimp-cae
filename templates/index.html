@@ -60,8 +60,9 @@
     <section class="card form-card">
       <h2><span class="icono-titulo"><i class="bi bi-calendar2-plus"></i></span> Nueva reserva</h2>
 
-      <form action="{{ url_for('reservar') }}" method="post"
-      onsubmit="return mostrarRecomendaciones(event, this);">
+      <form id="formularioReserva"
+      action="{{ url_for('reservar') }}"
+      method="post">
         <label><i class="bi bi-person"></i> Trabajador *</label>
         <input name="trabajador" placeholder="Nombre y apellido" required>
 
@@ -281,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
   actualizarFoto();
 });
 </script>
-  ```html
+  
 <!-- POP-UP DE RECOMENDACIONES MIMP-CAE -->
 <div id="modalRecomendaciones" class="modal-recomendaciones">
   <div class="contenido-modal" role="dialog"
