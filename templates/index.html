@@ -552,15 +552,104 @@ function cerrarRecomendaciones() {
   #cae-chat-options button:hover {
     background: #fff0f1;
   }
+  
+.cae-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  box-sizing: border-box;
+}
+
+.cae-ayni-header {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: white;
+  border: 2px solid white;
+  flex-shrink: 0;
+}
+
+.cae-ayni-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cae-ayni-title strong {
+  font-size: 18px;
+}
+
+.cae-ayni-title span {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+#cae-chat-close {
+  flex-shrink: 0;
+  float: none !important;
+}
+
+#cae-chat-button.cae-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 18px 8px 8px;
+}
+
+.cae-ayni-launcher {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: white;
+  border: 2px solid white;
+}
+
 </style>
 
+
 <button id="cae-chat-button" type="button"
+  aria-expanded="false"
+  aria-controls="cae-chat-panel"
+  class="cae-launcher">
+
+  <img src="/static/ayni.png"
+       alt=""
+       class="cae-ayni-launcher">
+
+  <span>💬 Ayni</span>
+</button>
+
         aria-expanded="false" aria-controls="cae-chat-panel">
    💬 Ayni
 </button>
 
 <section id="cae-chat-panel" aria-label="Ayni, Asistente virtual MIMP-CAE">
-  <div id="cae-chat-header">
+  
+<div id="cae-chat-header" class="cae-chat-header">
+  <img src="/static/ayni.png"
+       alt="Ayni, asistente virtual MIMP-CAE"
+       class="cae-ayni-header">
+
+  <div class="cae-ayni-title">
+    <strong>Ayni</strong>
+    <span>Asistente Virtual MIMP-CAE</span>
+  </div>
+
+  <button id="cae-chat-close" type="button"
+    aria-label="Cerrar chat"
+    style="float:right;background:transparent;color:white;border:0;cursor:pointer;font-size:18px">
+    ×
+  </button>
+</div>
+
    Ayni
 <div style="font-size:12px;font-weight:normal;margin-top:5px">
   Asistente Virtual MIMP-CAE
