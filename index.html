@@ -779,7 +779,8 @@ function cerrarRecomendaciones() {
 </button>
 
 <section id="cae-chat-panel" aria-label="Ayni, Asistente virtual MIMP-CAE">
-  <div id="cae-chat-header" class="cae-chat-header">
+  
+<div id="cae-chat-header" class="cae-chat-header">
   <img src="/static/ayni.png"
        alt="Ayni, asistente virtual MIMP-CAE"
        class="cae-ayni-header">
@@ -791,25 +792,23 @@ function cerrarRecomendaciones() {
 
   <button id="cae-chat-close" type="button"
     aria-label="Cerrar chat"
+    style="background:transparent;color:white;border:0;cursor:pointer;font-size:18px">
+    ×
+  </button>
+</div>
+
+
+  <button id="cae-chat-close" type="button"
+    aria-label="Cerrar chat"
     style="float:right;background:transparent;color:white;border:0;cursor:pointer;font-size:18px">
     ×
   </button>
 </div>
-   Ayni
-<div style="font-size:12px;font-weight:normal;margin-top:5px">
-  Asistente Virtual MIMP-CAE
-</div>
-    <button id="cae-chat-close" type="button"
-      aria-label="Cerrar chat"
-      style="float:right;background:transparent;color:white;border:0;cursor:pointer;font-size:18px">
-      ✕
-    </button>
-    <div style="font-size:12px;font-weight:normal;margin-top:5px">
-      Atención y orientación
+
     </div>
   </div>
 
-  <div id="cae-chat-messages" aria-live="polite">
+  
     <div class="cae-message">
       ¡Hola! 👋 Bienvenido al sistema MIMP-CAE.
       Selecciona una pregunta para recibir orientación.
