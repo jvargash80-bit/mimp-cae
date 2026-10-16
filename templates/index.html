@@ -711,11 +711,11 @@ function cerrarRecomendaciones() {
 
   if (!button || !panel || !close || !messages || !options) return;
 
-  button.addEventListener("click", function () {
-    const opening = panel.style.display !== "block";
-    panel.style.display = opening ? "block" : "none";
-    button.setAttribute("aria-expanded", String(opening));
-  });
+button.addEventListener("click", function () {
+  const opening = panel.style.display !== "flex";
+  panel.style.display = opening ? "flex" : "none";
+  button.setAttribute("aria-expanded", String(opening));
+});
 
   close.addEventListener("click", function () {
     panel.style.display = "none";
